@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    :root {
+        --primary: #1a5c36; /* Darkened for better contrast */
+        --primary-light: #38ef7d;
+        --secondary: #1e90ff;
+        --dark: #0f172a;
+        --accent: #fbbf24;
+    }
+
+    /* --- ENHANCED BACKGROUND VISIBILITY --- */
+    body {
+        margin: 0;
+        /* Reduced white overlay from 0.85 to 0.6 for a much clearer image */
+        background: linear-gradient(rgba(248, 250, 252, 0.6), rgba(248, 250, 252, 0.6)), 
+                    url("{{ url_for('static', filename='background.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+        overflow-x: hidden;
+    }
+
+    /* Moving Banner */
+    .welcome-banner {
+        background: linear-gradient(90deg, #0f2027, #2c7a4b, #1e90ff);
+        color: #ffffff;
+        padding: 14px 0;
+        font-size: 1rem;
+        font-weight: 700;
+        overflow: hidden;
+        border-radius: 16px;
+        margin-bottom: 35px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .welcome-text {
+        display: inline-block;
+        white-space: nowrap;
+        animation: scrollText 20s linear infinite;
+    }
+
+    @keyframes scrollText {
+        from { transform: translateX(100%); }
+        to { transform: translateX(-100%); }
+    }
+
+    /* --- PREMIUM GLASS CONTAINER --- */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 45px;
+        /* Darker glass effect for better contrast against vivid backgrounds */
+        background: rgba(255, 255, 255, 0.7); 
+        backdrop-filter: blur(12px) saturate(160%);
+        -webkit-backdrop-filter: blur(12px) saturate(160%);
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--dark);
+        margin: 0;
+        letter-spacing: -2px;
+        background: linear-gradient(to right, #0f172a, #1a5c36);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Enhanced Cards */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255,255,255,1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .dashboard-card h3 { color: var(--dark); font-weight: 800; font-size: 1.4rem; }
+    .dashboard-card p { color: #475569; line-height: 1.6; font-weight: 500; }
+
+    .dashboard-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        border-color: var(--primary-light);
+    }
+
+    /* Icon Styling */
+    .icon-box {
+        width: 65px;
+        height: 65px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    }
+
+    /* Architecture Section */
+    .info-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 40px;
+        padding: 60px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 60px;
+        align-items: center;
+        border: 1px solid white;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    }
+
+    /* Console Animation Improvements */
+    .console-window {
+        background: #020617; /* Deeper black */
+        border-radius: 24px;
+        padding: 35px;
+        color: #cbd5e1;
+        font-family: 'Fira Code', monospace;
+        box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+    }
+
+    .animate-in {
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+</style>
+
+<div class="welcome-banner">
+    <div class="welcome-text">
+         <strong></strong> Welcome To Our Website - AI-Powerd Smart Irrigation System    </div>
+</div>
+
+<div class="dashboard-container animate-in">
+    <div class="hero-section">
+        <h2 class="dashboard-title">Digital Field Management</h2>
+        <p style="color: #334155; font-size: 1.25rem; max-width: 700px; line-height: 1.7; font-weight: 500;">
+            Precision agriculture meets artificial intelligence. Monitor and manage your hydration levels with automated expert insights.
+        </p>
+    </div>
+
+    <div class="card-grid">
+        <div class="dashboard-card animate-in" style="animation-delay: 0.1s;">
+            <div class="icon-box" style="background: #eff6ff; color: #2563eb;">
+                <i data-lucide="database"></i>
+            </div>
+            <h3>Smart Data Input</h3>
+            <p>Enter your <strong>Soil Moisture</strong> and <strong>Atmospheric</strong> data to begin the analysis cycle.</p>
+        </div>
+
+        <div class="dashboard-card animate-in" style="animation-delay: 0.2s; background: linear-gradient(135deg, #1a5c36, #22c55e); color: white;">
+            <div class="icon-box" style="background: rgba(255,255,255,0.25); color: white;">
+                <i data-lucide="cpu"></i>
+            </div>
+            <h3 style="color: white;">ML Regression</h3>
+            <p style="color: rgba(255,255,255,0.95);">The <strong>Random Forest Engine</strong> calculates the exact water volume required for your specific crop.</p>
+        </div>
+
+        <div class="dashboard-card animate-in" style="animation-delay: 0.3s;">
+            <div class="icon-box" style="background: #fffbeb; color: #d97706;">
+                <i data-lucide="bot"></i>
+            </div>
+            <h3>Groq AI Logic</h3>
+            <p><strong>Llama-3.3</strong> generates custom recommendations based on current weather patterns and soil health.</p>
+        </div>
+    </div>
+
+    <div class="info-section animate-in" style="animation-delay: 0.4s;">
+        <div>
+            <span style="color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">System Architecture</span>
+            <h2 style="font-size: 2.5rem; color: var(--dark); margin: 15px 0 30px 0; font-weight: 900;">Intelligence Pipeline</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                    <p style="margin:0; font-weight: 600; color: #334155;">User submits field parameters</p>
+                </div>
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                    <p style="margin:0; font-weight: 600; color: #334155;">Regression model predicts water deficit</p>
+                </div>
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                    <p style="margin:0; font-weight: 600; color: #334155;">LLM provides strategic action plan</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-window">
+             <div style="color: #22c55e;">$ run_agrisense_v2</div>
+             <div style="color: #64748b;">Processing manual inputs...</div>
+             <div style="color: #fbbf24; margin: 10px 0;">Prediction: 15.2 L/sqm water needed</div>
+             <div style="color: #38bdf8;">Consulting Groq Llama-3...</div>
+             <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; color: #22c55e;">
+                 STATUS: Optimizing field hydration...
+             </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+{% endblock %}

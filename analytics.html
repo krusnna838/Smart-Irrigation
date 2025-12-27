@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .analytics-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; animation: slideUp 0.8s ease; }
+    .intelligence-card { background: white; border-radius: 30px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; }
+    
+    .result-banner { padding: 25px; border-radius: 20px; font-weight: 800; font-size: 1.4rem; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 15px; }
+    .status-ok { background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0; }
+    .status-warn { background: #fef2f2; color: #991b1b; border: 2px solid #fecaca; }
+
+    .tips-content { line-height: 1.8; font-size: 1.1rem; color: #334155; white-space: pre-wrap; background: #fafafa; padding: 25px; border-radius: 20px; }
+
+    .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+    .btn-action { padding: 15px 30px; border-radius: 12px; font-weight: 700; text-decoration: none; color: white !important; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+</style>
+
+<div class="analytics-wrapper">
+    <div class="intelligence-card">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <span style="background: #e2e8f0; padding: 8px 20px; border-radius: 8px; font-weight: bold; color: #475569; text-transform: uppercase;">
+                IRRIGATION ANALYSIS FOR: {{ latest.Crop }}
+            </span>
+        </div>
+
+        {% if status == "NOT REQUIRED" %}
+            <div class="result-banner status-ok">
+                <i data-lucide="check-circle"></i> IRRIGATION NOT REQUIRED
+            </div>
+        {% elif status == "REQUIRED" %}
+            <div class="result-banner status-warn">
+                <i data-lucide="alert-triangle"></i> IRRIGATION REQUIRED
+            </div>
+        {% endif %}
+
+        <div class="tips-content">{{ ai_tips }}</div>
+
+        <div class="btn-group">
+                       <a href="/download_pdf" class="btn-action" style="background: #1b5e20;">
+                <i data-lucide="file-text"></i> Download Report (.pdf)
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>lucide.createIcons();</script>
+{% endblock %}

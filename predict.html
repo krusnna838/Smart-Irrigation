@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Main Layout */
+    .prediction-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin: 40px auto;
+        max-width: 1100px;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    /* Card Styling */
+    .glass-card {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+        border: 1px solid #f0f0f0;
+    }
+
+    /* Result Section Styling */
+    .result-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        border-radius: 24px;
+        padding: 40px;
+        background: linear-gradient(135deg, #2c7a4b, #38ef7d);
+        transition: all 0.5s ease;
+        min-height: 400px;
+    }
+
+    .rain-theme {
+        background: linear-gradient(135deg, #00b4db, #0083b0) !important;
+    }
+
+    /* Input Grid */
+    .input-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .full-width { grid-column: span 2; }
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+    }
+
+    input, select {
+        padding: 14px;
+        border-radius: 12px;
+        border: 2px solid #edf2f7;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    input:focus {
+        border-color: #2c7a4b;
+        outline: none;
+        background-color: #f9fffb;
+    }
+
+    /* Button Styling */
+    .btn-predict {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 12px;
+        background: #2c7a4b;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.3s;
+        box-shadow: 0 4px 12px rgba(44, 122, 75, 0.2);
+    }
+
+    .btn-predict:hover {
+        background: #215d39;
+        transform: translateY(-2px);
+    }
+
+    /* Animations & Icons */
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .status-icon { font-size: 80px; animation: bounce 2s infinite; margin-bottom: 20px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .data-badge {
+        background: rgba(255,255,255,0.2);
+        padding: 25px;
+        border-radius: 18px;
+        margin-top: 25px;
+        width: 100%;
+        backdrop-filter: blur(5px);
+        text-align: left;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 850px) {
+        .prediction-container { grid-template-columns: 1fr; }
+        .input-grid { grid-template-columns: 1fr; }
+        .full-width { grid-column: span 1; }
+    }
+</style>
+
+<div class="prediction-container">
+    <div class="glass-card">
+        <h2 style="color: #2c7a4b; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+            Field Analysis
+        </h2>
+        <form method="post">
+            <div class="input-grid">
+                <div class="form-group full-width">
+                    <label for="crop">Crop Name</label>
+                    <select name="crop" id="crop" required>
+                        <option value="">-- Select Crop --</option>
+                        <option>Wheat (Gehu)</option>
+                        <option>Rice (Paddy)</option>
+                        <option>Bajra</option>
+                        <option>Jowar</option>
+                        <option>Maize</option>
+                        <option>Sugarcane</option>
+                        <option>Cotton</option>
+                        <option>Soybean</option>
+                        <option>Groundnut</option>
+                        <option>Sunflower</option>
+                        <option>Potato</option>
+                        <option>Onion</option>
+                        <option>Tomato</option>
+                        <option>Chilli</option>
+                        <option>Brinjal</option>
+                        <option>Banana</option>
+                        <option>Mango</option>
+                        <option>Grapes</option>
+                        <option>Rose</option>
+                        <option>Marigold</option>
+                        <option>Jasmine</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Soil Moisture (%)</label>
+                    <input type="number" step="0.1" name="soil" placeholder="e.g. 45" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Temp (°C)</label>
+                    <input type="number" step="0.1" name="temp" placeholder="e.g. 30" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Humidity (%)</label>
+                    <input type="number" step="0.1" name="humidity" placeholder="e.g. 70" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Rainfall (mm)</label>
+                    <input type="number" step="0.1" name="rainfall" placeholder="e.g. 5" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-predict">Analyze & Predict</button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="result-panel {% if status == 'NOT REQUIRED' %}rain-theme{% endif %}">
+        
+        <div style="margin-bottom: 20px;">
+            <div style="background: #fff; color: {% if status == 'NOT REQUIRED' %}#0083b0{% else %}#2c7a4b{% endif %}; padding: 10px 25px; border-radius: 50px; font-weight: 800; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% if status == 'NOT REQUIRED' %}
+                    IRRIGATION NOT REQUIRED
+                {% else %}
+                    💧 IRRIGATION REQUIRED
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="status-icon">
+            {% if status == 'NOT REQUIRED' %}🌧️{% else %}⛲{% endif %}
+        </div>
+        
+        <h3 style="margin:0; opacity: 0.8; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 2px;">
+            AI Requirement Estimate
+        </h3>
+        <h1 style="font-size: 4.5rem; margin: 10px 0; font-weight: 900; line-height: 1;">
+            {{ result }}
+        </h1>
+        <p style="margin-bottom: 5px; font-weight: 500; opacity: 0.9;">Water volume per square meter</p>
+        
+        <div class="data-badge" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);">
+            <div style="display: flex; align-items: flex-start; gap: 15px;">
+                <div>
+                    <strong style="font-size: 1.1rem; display: block; margin-bottom: 5px;">
+                        Decision: {% if status == 'NOT REQUIRED' %}Wait for Rain{% else %}Apply Water Now{% endif %}
+                    </strong>
+                    <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; opacity: 0.9;">
+                        {% if status == 'NOT REQUIRED' %}
+                            System detected <strong>{{ rain_chance }}% chance of moisture/rainfall</strong>. 
+                            Manual irrigation is suspended to prevent over-saturation.
+                        {% else %}
+                            Soil moisture is below threshold. To ensure peak health for your crop, apply 
+                            <strong>{{ result }}</strong> immediately. No rain detected.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <p style="margin-top: 25px; font-size: 0.7rem; opacity: 0.6; letter-spacing: 1px;">
+            SYSTEM STATUS: ANALYSIS COMPLETE
+        </p>
+    </div>
+    {% else %}
+    <div class="glass-card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; background: #fafafa; border: 2px dashed #e2e8f0;">
+        <i data-lucide="database-zap" style="width: 60px; height: 60px; color: #cbd5e1; margin-bottom: 15px;"></i>
+        <p style="color: #a0aec0; font-weight: 500;">Waiting for field data parameters...</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
