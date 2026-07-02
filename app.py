@@ -11,7 +11,9 @@ app = Flask(__name__)
 # CONFIGURATION
 GROQ_API_KEY = "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"
 client = Groq(api_key=GROQ_API_KEY)
-HISTORY_FILE = "prediction_history.csv"
+
+# FIX: Set data logs path to the /tmp/ folder so Vercel can write to it
+HISTORY_FILE = "/tmp/prediction_history.csv"
 
 @app.route("/")
 def dashboard():
@@ -183,10 +185,11 @@ def download_pdf():
         pdf.set_font("Arial", '', 11)
         pdf.multi_cell(0, 8, txt=ai_logic)
 
-        # Output
+        # FIX: Direct PDF file generation into /tmp to bypass read-only server limits
         filename = f"AgriSense_Report_{latest['Crop']}.pdf"
-        pdf.output(filename)
-        return send_file(filename, as_attachment=True)
+        tmp_path = os.path.join("/tmp", filename)
+        pdf.output(tmp_path)
+        return send_file(tmp_path, as_attachment=True)
 
     except Exception as e:
         return f"Error: {str(e)}"
